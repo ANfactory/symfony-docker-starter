@@ -1,0 +1,4 @@
+app/.env
+app/public/bundles
+app/vendor
+app/var

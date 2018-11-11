@@ -1,0 +1,42 @@
+version: '3.4'
+
+services:
+  db:
+    image: mysql:5.7
+    environment:
+      - MYSQL_DATABASE=symfony_dev
+      - MYSQL_USER=symfony_dev
+      - MYSQL_PASSWORD=!ChangeMe!
+      - MYSQL_RANDOM_ROOT_PASSWORD=yes
+    ports:
+      - 3306:3306
+
+  php:
+    image: anfactory/php
+    build:
+      context: ./app
+      target: anfactory_php
+      cache_from:
+        - anfactory/php
+        - anfactory/nginx
+    depends_on:
+      - db
+    environment:
+      - APP_ENV=dev
+    volumes:
+      - ./app:/var/www:rw,cached
+
+  nginx:
+    image: anfactory/nginx
+    build:
+      context: ./app
+      target: anfactory_nginx
+      cache_from:
+        - anfactory/php
+        - anfactory/nginx
+    depends_on:
+      - php
+    volumes:
+      - ./app/public:/var/www/public:ro
+    ports:
+      - 80:80
