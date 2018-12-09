@@ -14,7 +14,7 @@ services:
   php:
     image: anfactory/php
     build:
-      context: ./app
+      context: .
       target: anfactory_php
       cache_from:
         - anfactory/php
@@ -24,12 +24,12 @@ services:
     environment:
       - APP_ENV=dev
     volumes:
-      - ./app:/var/www:rw,cached
+      - .:/var/www:rw,cached
 
   nginx:
     image: anfactory/nginx
     build:
-      context: ./app
+      context: .
       target: anfactory_nginx
       cache_from:
         - anfactory/php
@@ -37,6 +37,6 @@ services:
     depends_on:
       - php
     volumes:
-      - ./app/public:/var/www/public:ro
+      - ./public:/var/www/public:ro
     ports:
       - 80:80
